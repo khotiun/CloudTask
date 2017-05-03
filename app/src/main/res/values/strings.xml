@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CloudTask</string>
+    <string name="sign_in">Авторизация</string>
+    <string name="registration">Регистрация</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+</resources>

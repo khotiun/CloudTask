@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "335795409149",
+    "firebase_url": "https://cloudtask-c3bc2.firebaseio.com",
+    "project_id": "cloudtask-c3bc2",
+    "storage_bucket": "cloudtask-c3bc2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335795409149:android:48be07863e0d3433",
+        "android_client_info": {
+          "package_name": "com.example.mypc.cloudtask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335795409149-9tf5hakgifna3nm2emt7p5km1bec3oof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mypc.cloudtask",
+            "certificate_hash": "9d134927f0bbcc0b503041d763afeefcca9cb00e"
+          }
+        },
+        {
+          "client_id": "335795409149-3bgu3oo9s39aavc0th0o6ajsjs1lj8dh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQtxqrUA-vjNpUU618sNB9XxKycPg531I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335795409149-3bgu3oo9s39aavc0th0o6ajsjs1lj8dh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
