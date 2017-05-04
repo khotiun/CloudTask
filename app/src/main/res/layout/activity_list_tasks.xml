@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.mypc.cloudtask.ListTasksActivity">
 
-    <ListView
-        android:id="@+id/list_view_user_tasks"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_user_tasks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
     <Button
         android:id="@+id/btn_new_task"
