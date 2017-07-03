@@ -5,4 +5,5 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="del">del</string>
+    <string name="add_image">add image</string>
 </resources>

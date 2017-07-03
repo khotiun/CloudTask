@@ -1,5 +1,6 @@
 package com.example.mypc.cloudtask;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +25,6 @@ public class ListTasksActivity extends AppCompatActivity {
 //    FirebaseListAdapter mAdapter;
 
     //    ListView listViewTask;
-    RecyclerView mRecyclerView;
     private Button btnNewTask;
     private EditText etNewTask;
 
@@ -34,12 +34,14 @@ public class ListTasksActivity extends AppCompatActivity {
 
         public TaskViewHolder(View itemView) {
             super(itemView);
-
             mTitleTask = (TextView) itemView.findViewById(R.id.tv_item);
             mDel = (Button) itemView.findViewById(R.id.btn_item_del);
         }
     }
 
+
+
+    //В первом параметре тип нашей модели второй это наш класс вью холдера
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +68,11 @@ public class ListTasksActivity extends AppCompatActivity {
             }
         });
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_user_tasks);
-        final FirebaseRecyclerAdapter<String, TaskViewHolder> adapter;//адаптер для нашего списка
-        //В первом параметре тип нашей модели второй это наш класс вью холдера
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_user_tasks);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));//как будут распологатся элементы в списке
         recyclerView.setHasFixedSize(true);
 
+        FirebaseRecyclerAdapter<String, TaskViewHolder> adapter;//адаптер для нашего списка
         adapter = new FirebaseRecyclerAdapter<String, TaskViewHolder>(
                 String.class,//модель
                 R.layout.item_task,//наш макет
@@ -85,8 +86,16 @@ public class ListTasksActivity extends AppCompatActivity {
                 viewHolder.mDel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DatabaseReference itemRef = getRef(position);
+                        DatabaseReference itemRef = getRef(position);//getRef - ссылка на задачу которую нужно удалить
                         itemRef.removeValue();
+                    }
+                });
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(ListTasksActivity.this,DetailTaskActivity.class);
+                        intent.putExtra("Reference",getRef(position).getKey().toString());//ключ по которому идентифицируем нашу задачу, понадобится для составления имени изображения
+                        startActivity(intent);
                     }
                 });
             }
