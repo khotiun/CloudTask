@@ -15,6 +15,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func2;
+
 public class EmailPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
@@ -58,6 +62,30 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
             Intent intent = new Intent(EmailPasswordActivity.this, ListTasksActivity.class);
             startActivity(intent);
         }
+
+        btnSignIn.setEnabled(false);
+        btnRegistration.setEnabled(false);
+
+        //излучаю данные используя RxEditText
+        Observable<String> emailObservable = RxEditText.getTextWatcherObservable(etEmail);
+        Observable<String> passwordObservable = RxEditText.getTextWatcherObservable(etPassword);
+        //combineLatest - служит для обьединения Observable
+        Observable.combineLatest(emailObservable, passwordObservable, new Func2<String, String, Boolean>() {
+            @Override
+            public Boolean call(String s, String s2) {//приходят строка эмейла и пароля
+                //если значения пусты возвращаем фолс
+                if (s.isEmpty() || s2.isEmpty()) {
+
+                    return false;
+                } else return true;
+            }
+        }).subscribe(new Action1<Boolean>() {//добавление подписчика, в котором будем блакировать наши кнопки регестрации и авторизации в зависимости от значения валидации
+            @Override
+            public void call(Boolean aBoolean) {
+                btnSignIn.setEnabled(aBoolean);
+                btnRegistration.setEnabled(aBoolean);
+            }
+        });
     }
 
     @Override
