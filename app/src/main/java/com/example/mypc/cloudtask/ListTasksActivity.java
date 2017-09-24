@@ -5,16 +5,24 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mypc.cloudtask.db.DBservice;
+import com.example.mypc.cloudtask.db.models.TaskRealmModel;
+import com.example.mypc.cloudtask.history.HistoryActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import io.realm.Realm;
 
 public class ListTasksActivity extends AppCompatActivity {
 
@@ -40,12 +48,15 @@ public class ListTasksActivity extends AppCompatActivity {
     }
 
 
-
     //В первом параметре тип нашей модели второй это наш класс вью холдера
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
+
+        Realm.init(this);
+
+        DBservice dBservice = new DBservice();
 
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();//получаем экземляр FirebaseDatabase и из него ссылку на базу данных
 //        listViewTask = (ListView) findViewById(R.id.list_view_user_tasks);
@@ -65,6 +76,16 @@ public class ListTasksActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDatabaseReference.child(user.getUid()).child("Tasks").push().setValue(etNewTask.getText().toString());
+
+                //сохраняем в локальную бд
+                TaskRealmModel taskRealmModel = new TaskRealmModel();
+                taskRealmModel.setTitle(etNewTask.getText().toString());
+                //сохранение в дб используя rx
+                dBservice.save(taskRealmModel, TaskRealmModel.class)//принимает обьект, который хотим сохранить и класс
+                        //метод save возвращает Observable по этому сохранение не выполнится пока мы не подпишимся на него
+                        .subscribe(taskRealmModel1 -> {
+                            Toast.makeText(ListTasksActivity.this, "Сохранено в бд", Toast.LENGTH_SHORT).show();
+                        });
             }
         });
 
@@ -93,13 +114,31 @@ public class ListTasksActivity extends AppCompatActivity {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(ListTasksActivity.this,DetailTaskActivity.class);
-                        intent.putExtra("Reference",getRef(position).getKey().toString());//ключ по которому идентифицируем нашу задачу, понадобится для составления имени изображения
+                        Intent intent = new Intent(ListTasksActivity.this, DetailTaskActivity.class);
+                        intent.putExtra("Reference", getRef(position).getKey().toString());//ключ по которому идентифицируем нашу задачу, понадобится для составления имени изображения
                         startActivity(intent);
                     }
                 });
             }
         };
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_history:
+                Intent intent = new Intent(this, HistoryActivity.class);
+                startActivity(intent);
+                return false;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

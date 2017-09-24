@@ -75,7 +75,7 @@ public class DetailTaskActivity extends AppCompatActivity implements View.OnClic
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                             Log.d(TAG, finalLocalFile.toString());
 
-                            Picasso.with(getBaseContext())
+                            Picasso.with(DetailTaskActivity.this)
                                     .load(Uri.fromFile(finalLocalFile))//fromFile - получим Uri из только что скаченого файла
                                     .into(mIVpicture);
 
